@@ -1,0 +1,40 @@
+# Stack de l'application : l'API Node.js + sa base MongoDB.
+# Démarrage : docker-compose up -d --build
+# L'API attend que Mongo réponde grâce à "depends_on" (démarrage dans l'ordre,
+# pas une vraie attente de disponibilité, mais Mongoose retente la connexion
+# automatiquement les premières secondes donc ça passe en pratique).
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: cinema-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"   # accès direct à Mongo depuis ta machine si besoin (Compass, mongosh...)
+    volumes:
+      - mongo_data:/data/db
+
+  api:
+    build: .
+    container_name: cinema-api
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      # "mongo" = le nom du service ci-dessus, résolu automatiquement par Docker
+      # (comme "namenode"/"hadoop-runner" dans l'autre projet) : pas besoin de
+      # connaître d'adresse IP, le réseau Docker fait la résolution de nom.
+      - MONGODB_URI=mongodb://mongo:27017/cinema
+      - JWT_SECRET=super_secret_key_change_me_in_production
+      - JWT_EXPIRES_IN=24h
+      - UPLOAD_PATH=uploads/
+    volumes:
+      # Les fichiers uploadés survivent aux redémarrages/rebuilds du conteneur,
+      # et restent consultables directement dans le dossier du projet.
+      - ./uploads:/app/uploads
+
+volumes:
+  mongo_data:

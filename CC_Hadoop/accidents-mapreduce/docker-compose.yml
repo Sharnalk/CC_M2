@@ -1,0 +1,70 @@
+version: "3"
+
+# Cluster Hadoop minimal (HDFS + YARN) pour le Sujet 3.
+# 4 conteneurs = 4 rôles réels d'un cluster Hadoop :
+#   - namenode         : le "chef" de HDFS, sait où sont les fichiers
+#   - datanode         : stocke réellement les blocs de données
+#   - resourcemanager  : le "chef" de YARN, distribue le travail (renommé hadoop-runner,
+#                        c'est le conteneur où on lance les commandes hdfs/hadoop)
+#   - nodemanager      : exécute réellement les tâches Map/Reduce
+
+services:
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    restart: on-failure
+    ports:
+      - "9870:9870"   # interface web HDFS : http://localhost:9870
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=accidents-cluster
+    env_file:
+      - ./hadoop.env
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    restart: on-failure
+    depends_on:
+      - namenode
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-runner
+    restart: on-failure
+    depends_on:
+      - namenode
+      - datanode
+    ports:
+      - "8088:8088"   # interface web YARN (suivi des Jobs) : http://localhost:8088
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870 datanode:9864
+    env_file:
+      - ./hadoop.env
+    volumes:
+      - ./data:/data
+      - ./target:/programs
+
+  nodemanager:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    container_name: nodemanager
+    restart: on-failure
+    depends_on:
+      - namenode
+      - datanode
+      - resourcemanager
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870 datanode:9864 hadoop-runner:8088
+    env_file:
+      - ./hadoop.env
+
+volumes:
+  hadoop_namenode:
+  hadoop_datanode:

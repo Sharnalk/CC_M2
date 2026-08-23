@@ -1,0 +1,27 @@
+# Stack séparée, pour l'analyse de qualité de code uniquement (SonarQube).
+# Volontairement dans un fichier à part : pas besoin de faire tourner
+# SonarQube en permanence, seulement quand tu veux lancer une analyse.
+#
+# Démarrage : docker-compose -f docker-compose.sonar.yml up -d
+# Arrêt     : docker-compose -f docker-compose.sonar.yml down
+
+services:
+  sonarqube:
+    image: sonarqube:community
+    container_name: cinema-sonarqube
+    restart: unless-stopped
+    ports:
+      - "9000:9000"   # interface web : http://localhost:9000
+    environment:
+      # Désactive une vérification système (mémoire virtuelle) que Docker
+      # Desktop ne satisfait pas par défaut ; sans ça SonarQube refuse de démarrer.
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
