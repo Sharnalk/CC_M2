@@ -1,0 +1,30 @@
+# --- Java / Maven (CC_Hadoop) ---
+target/
+*.class
+
+# --- Node.js (CC_AIBD_07_NODEJS) ---
+node_modules/
+coverage/
+dist/
+build/
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+uploads/*
+!uploads/.gitkeep
+
+# --- Env / secrets ---
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# --- OS / editor ---
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+bin
+obj
