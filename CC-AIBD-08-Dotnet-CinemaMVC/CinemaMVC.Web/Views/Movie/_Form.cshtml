@@ -1,0 +1,31 @@
+@model CinemaMVC.Web.Models.Entities.Movie
+
+<div>
+    <label asp-for="Title" class="label">Titre</label>
+    <input asp-for="Title" class="input" placeholder="Ex : Inception" />
+    <span asp-validation-for="Title" class="field-error"></span>
+</div>
+
+<div class="grid gap-5 sm:grid-cols-3">
+    <div>
+        <label asp-for="Genre" class="label">Genre</label>
+        <input asp-for="Genre" class="input" placeholder="Ex : Science-Fiction" />
+        <span asp-validation-for="Genre" class="field-error"></span>
+    </div>
+    <div>
+        <label asp-for="DurationMinutes" class="label">Durée (min)</label>
+        <input asp-for="DurationMinutes" type="number" class="input" placeholder="Ex : 148" />
+        <span asp-validation-for="DurationMinutes" class="field-error"></span>
+    </div>
+    <div>
+        <label asp-for="ReleaseDate" class="label">Date de sortie</label>
+        <input asp-for="ReleaseDate" type="date" class="input" />
+        <span asp-validation-for="ReleaseDate" class="field-error"></span>
+    </div>
+</div>
+
+<div>
+    <label asp-for="Description" class="label">Synopsis</label>
+    <textarea asp-for="Description" rows="4" class="input" placeholder="Résumé du film..."></textarea>
+    <span asp-validation-for="Description" class="field-error"></span>
+</div>

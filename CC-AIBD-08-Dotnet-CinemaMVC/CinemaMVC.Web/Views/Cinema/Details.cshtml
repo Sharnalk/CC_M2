@@ -1,0 +1,26 @@
+@model CinemaMVC.Web.Models.Entities.Cinema
+@{
+    ViewData["Title"] = "Détails du cinéma";
+}
+
+<div class="page-narrow">
+    <h1 class="page-title">@Model.Name</h1>
+    <p class="page-lead">Fiche de l'établissement.</p>
+
+    <div class="card card-body mt-6">
+        <dl class="divide-y divide-slate-200">
+            <div class="dl-row"><dt class="dl-label">Nom</dt><dd class="dl-value">@Model.Name</dd></div>
+            <div class="dl-row"><dt class="dl-label">Adresse</dt><dd class="dl-value">@Model.Address</dd></div>
+            <div class="dl-row"><dt class="dl-label">Ville</dt><dd class="dl-value">@Model.City</dd></div>
+            <div class="dl-row">
+                <dt class="dl-label">Salles</dt>
+                <dd class="dl-value">@(Model.Rooms?.Count ?? 0)</dd>
+            </div>
+        </dl>
+    </div>
+
+    <div class="form-actions mt-6">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-primary">Modifier</a>
+        <a asp-action="Index" class="btn-secondary">Retour à la liste</a>
+    </div>
+</div>

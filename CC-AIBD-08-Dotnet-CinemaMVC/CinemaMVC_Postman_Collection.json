@@ -1,0 +1,333 @@
+{
+	"info": {
+		"_postman_id": "c35df129-8472-4d22-b91c-2236a280f901",
+		"name": "Project 8 - Cinema MVC (.NET Core)",
+		"description": "Postman collection for testing the web routing, pages, and administration endpoints of the Project 8 .NET MVC Cinema Group application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public Space",
+			"item": [
+				{
+					"name": "Home Page (Cinemas & Search)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/?searchCinema=Lyon&searchMovie=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "searchCinema",
+									"value": "Lyon",
+									"description": "Search cinemas by name/city"
+								},
+								{
+									"key": "searchMovie",
+									"value": "",
+									"description": "Search sessions by movie title"
+								}
+							]
+						},
+						"description": "Access the public index page showing cinemas and search fields."
+					},
+					"response": []
+				},
+				{
+					"name": "Cinema Details & Sessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Home/CinemaDetails/{{cinemaId}}?date=2026-06-05",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Home",
+								"CinemaDetails",
+								"{{cinemaId}}"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2026-06-05",
+									"description": "Select date for sessions"
+								}
+							]
+						},
+						"description": "Displays the movies and showtime sessions for a specific cinema."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Identity Authentication",
+			"item": [
+				{
+					"name": "Login Page GET",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Account/Login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Account",
+								"Login"
+							]
+						},
+						"description": "Retrieve the Login HTML page containing the anti-CSRF token."
+					},
+					"response": []
+				},
+				{
+					"name": "Login Submit POST",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "Email",
+									"value": "admin@cinegroup.com",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "Admin123!",
+									"type": "text"
+								},
+								{
+									"key": "RememberMe",
+									"value": "false",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/Account/Login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Account",
+								"Login"
+							]
+						},
+						"description": "Submit administrative credentials to establish a secure cookie session. Postman handles cookies automatically."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Account/Logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Account",
+								"Logout"
+							]
+						},
+						"description": "Clear the identity authentication cookie session."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Management (Requires Cookie)",
+			"item": [
+				{
+					"name": "List Cinemas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Admin/Cinemas?search=&page=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Admin",
+								"Cinemas"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Retrieve the list of cinemas inside the administration portal."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cinema View",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Admin/Cinemas/Create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Admin",
+								"Cinemas",
+								"Create"
+							]
+						},
+						"description": "Get the cinema creation form."
+					},
+					"response": []
+				},
+				{
+					"name": "List Rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Admin/Rooms?search=&page=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Admin",
+								"Rooms"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "List all cinema rooms inside the admin portal."
+					},
+					"response": []
+				},
+				{
+					"name": "List Movies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Admin/Movies?search=&page=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Admin",
+								"Movies"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "List all movies inside the admin portal."
+					},
+					"response": []
+				},
+				{
+					"name": "List Sessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/Admin/Sessions?search=&page=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"Admin",
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "List scheduled movie sessions in the admin portal."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7198",
+			"type": "string"
+		},
+		{
+			"key": "cinemaId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,50 @@
+@model IEnumerable<CinemaMVC.Web.Models.Entities.Room>
+@{
+    ViewData["Title"] = "Gestion des Salles";
+}
+
+<div class="page">
+    <div class="flex items-start justify-between gap-4">
+        <div>
+            <h1 class="page-title">Gestion des Salles</h1>
+            <p class="page-lead">Les salles de projection, rattachées à leur cinéma.</p>
+        </div>
+        <a asp-action="Create" class="btn-primary shrink-0">Ajouter une salle</a>
+    </div>
+
+    <partial name="_SearchBar" model="@("Rechercher par salle ou cinéma...")" />
+
+    <div class="table-wrap mt-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Cinéma</th>
+                    <th>Salle</th>
+                    <th>Capacité</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="4" class="cell-empty">Aucune salle trouvée.</td></tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">@(item.Cinema?.Name ?? "Inconnu")</td>
+                        <td>@item.Name</td>
+                        <td><span class="badge">@item.Capacity places</span></td>
+                        <td class="space-x-4 text-right">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="link-action">Détails</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="link-action">Modifier</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="link-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <partial name="_Pagination" />
+</div>

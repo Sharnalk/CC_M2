@@ -1,0 +1,50 @@
+@model IEnumerable<CinemaMVC.Web.Models.Entities.Cinema>
+@{
+    ViewData["Title"] = "Gestion des Cinémas";
+}
+
+<div class="page">
+    <div class="flex items-start justify-between gap-4">
+        <div>
+            <h1 class="page-title">Gestion des Cinémas</h1>
+            <p class="page-lead">Les établissements du réseau : recherche, ajout, modification et suppression.</p>
+        </div>
+        <a asp-action="Create" class="btn-primary shrink-0">Ajouter un cinéma</a>
+    </div>
+
+    <partial name="_SearchBar" model="@("Rechercher par nom, ville...")" />
+
+    <div class="table-wrap mt-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Adresse</th>
+                    <th>Ville</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="4" class="cell-empty">Aucun cinéma trouvé.</td></tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">@item.Name</td>
+                        <td>@item.Address</td>
+                        <td><span class="badge">@item.City</span></td>
+                        <td class="space-x-4 text-right">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="link-action">Détails</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="link-action">Modifier</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="link-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <partial name="_Pagination" />
+</div>

@@ -1,0 +1,54 @@
+@model IEnumerable<CinemaMVC.Web.Models.Entities.Session>
+@{
+    ViewData["Title"] = "Gestion des Séances";
+}
+
+<div class="page">
+    <div class="flex items-start justify-between gap-4">
+        <div>
+            <h1 class="page-title">Gestion des Séances</h1>
+            <p class="page-lead">La programmation : un film, une salle, un horaire, un tarif.</p>
+        </div>
+        <a asp-action="Create" class="btn-primary shrink-0">Ajouter une séance</a>
+    </div>
+
+    <partial name="_SearchBar" model="@("Rechercher par film, salle, cinéma...")" />
+
+    <div class="table-wrap mt-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Film</th>
+                    <th>Cinéma</th>
+                    <th>Salle</th>
+                    <th>Horaire</th>
+                    <th>Tarif</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="cell-empty">Aucune séance trouvée.</td></tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">@(item.Movie?.Title ?? "Inconnu")</td>
+                        <td>@(item.Room?.Cinema?.Name ?? "Inconnu")</td>
+                        <td>@(item.Room?.Name ?? "Inconnu")</td>
+                        <td>@item.ShowTime.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td><span class="badge">@item.Price.ToString("F2") €</span></td>
+                        <td class="space-x-4 text-right">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="link-action">Détails</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="link-action">Modifier</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="link-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <partial name="_Pagination" />
+</div>

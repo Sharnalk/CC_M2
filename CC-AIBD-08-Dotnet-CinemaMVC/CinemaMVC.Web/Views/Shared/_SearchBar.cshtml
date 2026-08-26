@@ -1,0 +1,25 @@
+@*
+    Barre de recherche des listes d'administration.
+    Le modèle est simplement le texte indicatif du champ, qui change selon l'entité.
+
+    Note : les variables ne peuvent pas s'appeler "page", @@page étant une
+    directive réservée de Razor.
+*@
+@model string
+@{
+    var filter = ViewData["CurrentFilter"] as string;
+    var currentPage = (int)ViewData["CurrentPage"]!;
+    var totalPages = (int)ViewData["TotalPages"]!;
+}
+
+<div class="toolbar">
+    <form method="get" class="flex w-full gap-2 sm:w-auto">
+        <input type="text" name="search" value="@filter" placeholder="@Model" class="input sm:w-80" />
+        <button type="submit" class="btn-dark">Rechercher</button>
+        @if (!string.IsNullOrEmpty(filter))
+        {
+            <a asp-action="Index" class="btn-secondary">Réinitialiser</a>
+        }
+    </form>
+    <span class="text-xs text-slate-400">Page @currentPage sur @totalPages</span>
+</div>

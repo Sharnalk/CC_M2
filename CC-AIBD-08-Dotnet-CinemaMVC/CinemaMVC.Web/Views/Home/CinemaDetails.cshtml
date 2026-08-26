@@ -1,0 +1,81 @@
+@model CinemaMVC.Web.Controllers.CinemaDetailsViewModel
+@{
+    ViewData["Title"] = Model.Cinema.Name;
+    var targetDate = (DateTime)ViewData["TargetDate"]!;
+}
+
+<div class="bg-slate-900 py-12">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 sm:px-6 lg:px-8 md:flex-row md:items-end md:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-white">@Model.Cinema.Name</h1>
+            <p class="mt-2 text-sm text-slate-300">@Model.Cinema.Address, @Model.Cinema.City</p>
+        </div>
+        <a asp-action="Index" class="nav-link">&larr; Retour aux cinémas</a>
+    </div>
+</div>
+
+<div class="sticky top-16 z-40 border-b border-slate-200 bg-white">
+    <nav class="mx-auto flex max-w-7xl gap-6 overflow-x-auto px-4 py-4 sm:px-6 lg:px-8">
+        @for (var i = 0; i < 4; i++)
+        {
+            var day = DateTime.Today.AddDays(i);
+            var isSelected = day.Date == targetDate.Date;
+            var label = i switch { 0 => "Aujourd'hui", 1 => "Demain", _ => day.ToString("dddd dd/MM") };
+
+            <a asp-action="CinemaDetails" asp-route-id="@Model.Cinema.Id" asp-route-date="@day.ToString("yyyy-MM-dd")"
+               class="whitespace-nowrap border-b-2 pb-2 text-sm font-medium capitalize transition @(isSelected ? "border-brand-600 text-brand-600" : "border-transparent text-slate-500 hover:text-slate-800")">
+                @label
+            </a>
+        }
+    </nav>
+</div>
+
+<div class="page">
+    <div class="mx-auto max-w-4xl">
+        <h2 class="border-b border-slate-200 pb-3 text-lg font-semibold text-slate-900">
+            Programmation du @targetDate.ToString("dd MMMM yyyy")
+        </h2>
+
+        @if (!Model.MoviesWithSessions.Any())
+        {
+            <div class="card mt-8 p-16 text-center">
+                <p class="text-sm font-medium text-slate-900">Aucune programmation ce jour</p>
+                <p class="page-lead">Aucune séance n'est planifiée dans ce cinéma à cette date.</p>
+            </div>
+        }
+
+        <div class="mt-8 space-y-6">
+            @foreach (var group in Model.MoviesWithSessions)
+            {
+                var movie = group.Key;
+
+                <article class="card card-body">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-900">@movie.Title</h3>
+                            <p class="mt-1 text-xs text-slate-500">
+                                @movie.Genre · @movie.DurationMinutes min · sortie le @movie.ReleaseDate.ToString("dd/MM/yyyy")
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="mt-4 text-sm leading-relaxed text-slate-600">@movie.Description</p>
+
+                    <div class="mt-5 border-t border-slate-200 pt-4">
+                        <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Séances</h4>
+                        <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                            @foreach (var session in group.Value)
+                            {
+                                <div class="rounded-lg border border-slate-200 bg-slate-50 p-3 text-center transition hover:border-brand-400">
+                                    <p class="text-base font-semibold text-slate-900">@session.ShowTime.ToString("HH:mm")</p>
+                                    <p class="mt-0.5 text-xs text-slate-500">@session.Room?.Name</p>
+                                    <p class="mt-1.5 text-xs font-medium text-brand-700">@session.Price.ToString("F2") €</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+@model IEnumerable<CinemaMVC.Web.Models.Entities.Movie>
+@{
+    ViewData["Title"] = "Gestion des Films";
+}
+
+<div class="page">
+    <div class="flex items-start justify-between gap-4">
+        <div>
+            <h1 class="page-title">Gestion des Films</h1>
+            <p class="page-lead">Le catalogue projeté dans le réseau.</p>
+        </div>
+        <a asp-action="Create" class="btn-primary shrink-0">Ajouter un film</a>
+    </div>
+
+    <partial name="_SearchBar" model="@("Rechercher par titre, genre...")" />
+
+    <div class="table-wrap mt-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Genre</th>
+                    <th>Durée</th>
+                    <th>Sortie</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="5" class="cell-empty">Aucun film trouvé.</td></tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="cell-strong">@item.Title</td>
+                        <td><span class="badge">@item.Genre</span></td>
+                        <td>@item.DurationMinutes min</td>
+                        <td>@item.ReleaseDate.ToString("dd/MM/yyyy")</td>
+                        <td class="space-x-4 text-right">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="link-action">Détails</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="link-action">Modifier</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="link-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <partial name="_Pagination" />
+</div>

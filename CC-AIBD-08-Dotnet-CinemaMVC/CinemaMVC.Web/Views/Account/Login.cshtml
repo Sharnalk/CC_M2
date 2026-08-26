@@ -1,0 +1,43 @@
+@model CinemaMVC.Web.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Connexion";
+}
+
+<div class="mx-auto max-w-md px-4 py-16">
+    <h1 class="page-title text-center">Connexion</h1>
+    <p class="page-lead text-center">
+        Accès réservé aux administrateurs du réseau CineGroup.
+    </p>
+
+    <div class="card card-body mt-8">
+        <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="space-y-5">
+            <div asp-validation-summary="ModelOnly" class="field-error"></div>
+
+            <div>
+                <label asp-for="Email" class="label">Adresse e-mail</label>
+                <input asp-for="Email" class="input" placeholder="vous@exemple.com" />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+
+            <div>
+                <label asp-for="Password" class="label">Mot de passe</label>
+                <input asp-for="Password" class="input" placeholder="••••••••" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <label class="flex items-center gap-2 text-sm text-slate-600">
+                    <input asp-for="RememberMe" type="checkbox" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" />
+                    Se souvenir de moi
+                </label>
+                <a asp-action="ForgotPassword" class="text-sm link-action">Mot de passe oublié ?</a>
+            </div>
+
+            <button type="submit" class="btn-primary w-full justify-center">Se connecter</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

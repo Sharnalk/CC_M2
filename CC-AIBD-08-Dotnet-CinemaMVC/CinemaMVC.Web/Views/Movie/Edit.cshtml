@@ -1,0 +1,25 @@
+@model CinemaMVC.Web.Models.Entities.Movie
+@{
+    ViewData["Title"] = "Modifier un film";
+}
+
+<div class="page-narrow">
+    <h1 class="page-title">Modifier un film</h1>
+    <p class="page-lead">@Model.Title</p>
+
+    <div class="card card-body mt-6">
+        <form asp-action="Edit" class="space-y-5">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="field-error"></div>
+            <partial name="_Form" model="Model" />
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Enregistrer</button>
+                <a asp-action="Index" class="btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,19 @@
+@model CinemaMVC.Web.Models.Entities.Cinema
+
+<div>
+    <label asp-for="Name" class="label">Nom</label>
+    <input asp-for="Name" class="input" placeholder="Ex : CineGroup Grand Sud" />
+    <span asp-validation-for="Name" class="field-error"></span>
+</div>
+
+<div>
+    <label asp-for="Address" class="label">Adresse</label>
+    <input asp-for="Address" class="input" placeholder="Ex : 12 Rue de la République" />
+    <span asp-validation-for="Address" class="field-error"></span>
+</div>
+
+<div>
+    <label asp-for="City" class="label">Ville</label>
+    <input asp-for="City" class="input" placeholder="Ex : Lyon" />
+    <span asp-validation-for="City" class="field-error"></span>
+</div>

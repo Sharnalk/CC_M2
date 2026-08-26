@@ -1,0 +1,162 @@
+@{
+    var isAuth = User.Identity?.IsAuthenticated == true;
+}
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CineGroup</title>
+
+    @* Tailwind (Play CDN) + plugin forms, requis par Preline pour les champs de formulaire. *@
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6',
+                            600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    @*
+        Classes de composants du projet.
+
+        Sans elles, chaque bouton porterait une dizaine d'utilitaires Tailwind répétés
+        dans toutes les vues. Les regrouper ici avec @@apply donne un vocabulaire unique
+        (.btn-primary, .card, .input...) : les vues décrivent l'intention, plus la mise
+        en forme, et un changement de style se fait à un seul endroit.
+    *@
+    <style type="text/tailwindcss">
+        /* Structure de page */
+        .page        { @@apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10; }
+        .page-narrow { @@apply mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-10; }
+        .page-title  { @@apply text-2xl font-bold text-slate-900; }
+        .page-lead   { @@apply mt-1 text-sm text-slate-500; }
+
+        /* Surfaces */
+        .card        { @@apply bg-white rounded-xl border border-slate-200 shadow-sm; }
+        .card-body   { @@apply p-6; }
+
+        /* Boutons */
+        .btn           { @@apply inline-flex items-center gap-x-2 rounded-lg px-4 py-2.5 text-sm font-medium
+                                 transition disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2; }
+        .btn-primary   { @@apply btn bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-500; }
+        .btn-secondary { @@apply btn bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 focus:ring-slate-400; }
+        .btn-danger    { @@apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500; }
+        .btn-dark      { @@apply btn bg-slate-800 text-white hover:bg-slate-700 focus:ring-slate-500; }
+
+        /* Formulaires */
+        .label       { @@apply block text-sm font-medium text-slate-700 mb-1.5; }
+        .input       { @@apply block w-full rounded-lg border-slate-300 text-sm shadow-sm
+                               focus:border-brand-500 focus:ring-brand-500; }
+        .field-error { @@apply mt-1.5 block text-xs text-red-600; }
+        .form-actions{ @@apply flex items-center gap-x-3 pt-2; }
+
+        /* Tableaux */
+        .table-wrap  { @@apply overflow-hidden rounded-xl border border-slate-200 shadow-sm; }
+        .table       { @@apply min-w-full divide-y divide-slate-200; }
+        .table thead { @@apply bg-slate-50; }
+        .table th    { @@apply px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500; }
+        .table tbody { @@apply divide-y divide-slate-200 bg-white; }
+        .table td    { @@apply whitespace-nowrap px-6 py-4 text-sm text-slate-600; }
+        .table tbody tr { @@apply hover:bg-slate-50 transition; }
+        .cell-strong { @@apply font-medium text-slate-900; }
+        .cell-empty  { @@apply px-6 py-12 text-center text-sm text-slate-400; }
+
+        /* Divers */
+        .badge       { @@apply inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700; }
+        .link-action { @@apply font-medium text-brand-600 hover:text-brand-800; }
+        .link-danger { @@apply font-medium text-red-600 hover:text-red-800; }
+        .nav-link    { @@apply text-sm font-medium text-slate-300 hover:text-white transition; }
+        .nav-link-mobile { @@apply block rounded-lg px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white; }
+        .toolbar     { @@apply card mt-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between; }
+        .page-link   { @@apply inline-flex items-center px-3.5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition; }
+        .page-link-active { @@apply bg-brand-600 text-white hover:bg-brand-700; }
+        .dl-row      { @@apply py-3 sm:grid sm:grid-cols-3 sm:gap-4; }
+        .dl-label    { @@apply text-sm font-medium text-slate-500; }
+        .dl-value    { @@apply mt-1 text-sm text-slate-900 sm:col-span-2 sm:mt-0; }
+    </style>
+</head>
+<body class="flex h-full flex-col text-slate-800 antialiased">
+
+    <header class="sticky top-0 z-50 bg-slate-900 shadow-sm">
+        <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+
+                <div class="flex items-center gap-x-8">
+                    <a asp-controller="Home" asp-action="Index" class="text-xl font-bold text-white">CineGroup</a>
+
+                    <div class="hidden items-center gap-x-6 lg:flex">
+                        <a asp-controller="Home" asp-action="Index" class="nav-link">Accueil</a>
+                        @if (isAuth)
+                        {
+                            <span class="h-4 w-px bg-slate-700"></span>
+                            <a asp-controller="Cinema" asp-action="Index" class="nav-link">Cinémas</a>
+                            <a asp-controller="Room" asp-action="Index" class="nav-link">Salles</a>
+                            <a asp-controller="Movie" asp-action="Index" class="nav-link">Films</a>
+                            <a asp-controller="Session" asp-action="Index" class="nav-link">Séances</a>
+                        }
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-x-3">
+                    @if (isAuth)
+                    {
+                        <span class="hidden text-xs text-slate-400 sm:block">@User.Identity!.Name</span>
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-secondary">Déconnexion</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn-primary">Connexion</a>
+                    }
+
+                    @* Repli mobile : Preline gère l'ouverture via data-hs-collapse, sans script maison. *@
+                    <button type="button" class="hs-collapse-toggle p-2 text-slate-400 hover:text-white lg:hidden"
+                            data-hs-collapse="#mobileMenu" aria-label="Menu">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="mobileMenu" class="hs-collapse hidden overflow-hidden transition-all duration-300 lg:hidden">
+                <div class="space-y-1 border-t border-slate-800 py-3">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link-mobile">Accueil</a>
+                    @if (isAuth)
+                    {
+                        <a asp-controller="Cinema" asp-action="Index" class="nav-link-mobile">Cinémas</a>
+                        <a asp-controller="Room" asp-action="Index" class="nav-link-mobile">Salles</a>
+                        <a asp-controller="Movie" asp-action="Index" class="nav-link-mobile">Films</a>
+                        <a asp-controller="Session" asp-action="Index" class="nav-link-mobile">Séances</a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow">
+        @RenderBody()
+    </main>
+
+    <footer class="mt-auto border-t border-slate-800 bg-slate-900 py-6">
+        <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 sm:flex-row sm:px-6 lg:px-8">
+            <p class="text-sm text-slate-400">&copy; @DateTime.Now.Year CineGroup</p>
+            <p class="text-xs text-slate-500">ASP.NET Core MVC (.NET 10) · Tailwind CSS · Preline UI</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/preline@2/dist/preline.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

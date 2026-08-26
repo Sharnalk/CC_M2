@@ -1,0 +1,22 @@
+@model CinemaMVC.Web.Models.Entities.Room
+
+<div>
+    <label asp-for="CinemaId" class="label">Cinéma</label>
+    <select asp-for="CinemaId" asp-items="ViewBag.CinemaId" class="input">
+        <option value="">-- Sélectionner un cinéma --</option>
+    </select>
+    <span asp-validation-for="CinemaId" class="field-error"></span>
+</div>
+
+<div class="grid gap-5 sm:grid-cols-2">
+    <div>
+        <label asp-for="Name" class="label">Nom de la salle</label>
+        <input asp-for="Name" class="input" placeholder="Ex : Salle 3, Salle IMAX..." />
+        <span asp-validation-for="Name" class="field-error"></span>
+    </div>
+    <div>
+        <label asp-for="Capacity" class="label">Capacité</label>
+        <input asp-for="Capacity" type="number" class="input" placeholder="Ex : 150" />
+        <span asp-validation-for="Capacity" class="field-error"></span>
+    </div>
+</div>

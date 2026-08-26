@@ -1,0 +1,34 @@
+@*
+    Pagination partagée par toutes les listes d'administration.
+
+    Aucun paramètre n'est nécessaire : ViewData est hérité de la vue appelante, et
+    asp-action="Index" se résout vers le contrôleur courant. Ce bloc était auparavant
+    recopié à l'identique dans les quatre vues Index.
+*@
+@{
+    var filter = ViewData["CurrentFilter"] as string;
+    var currentPage = (int)ViewData["CurrentPage"]!;
+    var totalPages = (int)ViewData["TotalPages"]!;
+}
+
+@if (totalPages > 1)
+{
+    <nav class="mt-8 flex justify-center" aria-label="Pagination">
+        <div class="inline-flex divide-x divide-slate-200 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+            @if (currentPage > 1)
+            {
+                <a asp-action="Index" asp-route-search="@filter" asp-route-page="@(currentPage - 1)" class="page-link">Précédent</a>
+            }
+            @for (var i = 1; i <= totalPages; i++)
+            {
+                <a asp-action="Index" asp-route-search="@filter" asp-route-page="@i"
+                   class="page-link @(i == currentPage ? "page-link-active" : "")"
+                   aria-current="@(i == currentPage ? "page" : null)">@i</a>
+            }
+            @if (currentPage < totalPages)
+            {
+                <a asp-action="Index" asp-route-search="@filter" asp-route-page="@(currentPage + 1)" class="page-link">Suivant</a>
+            }
+        </div>
+    </nav>
+}

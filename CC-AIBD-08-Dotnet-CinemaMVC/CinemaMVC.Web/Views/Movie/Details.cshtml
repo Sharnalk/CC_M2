@@ -1,0 +1,24 @@
+@model CinemaMVC.Web.Models.Entities.Movie
+@{
+    ViewData["Title"] = "Détails du film";
+}
+
+<div class="page-narrow">
+    <h1 class="page-title">@Model.Title</h1>
+    <p class="page-lead">Fiche du film.</p>
+
+    <div class="card card-body mt-6">
+        <dl class="divide-y divide-slate-200">
+            <div class="dl-row"><dt class="dl-label">Titre</dt><dd class="dl-value">@Model.Title</dd></div>
+            <div class="dl-row"><dt class="dl-label">Genre</dt><dd class="dl-value">@Model.Genre</dd></div>
+            <div class="dl-row"><dt class="dl-label">Durée</dt><dd class="dl-value">@Model.DurationMinutes min</dd></div>
+            <div class="dl-row"><dt class="dl-label">Sortie</dt><dd class="dl-value">@Model.ReleaseDate.ToString("dd/MM/yyyy")</dd></div>
+            <div class="dl-row"><dt class="dl-label">Synopsis</dt><dd class="dl-value">@Model.Description</dd></div>
+        </dl>
+    </div>
+
+    <div class="form-actions mt-6">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-primary">Modifier</a>
+        <a asp-action="Index" class="btn-secondary">Retour à la liste</a>
+    </div>
+</div>

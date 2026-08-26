@@ -1,0 +1,24 @@
+@model CinemaMVC.Web.Models.Entities.Session
+@{
+    ViewData["Title"] = "Supprimer une séance";
+}
+
+<div class="page-narrow">
+    <h1 class="page-title">Supprimer cette séance ?</h1>
+    <p class="page-lead">Cette action est définitive.</p>
+
+    <div class="card card-body mt-6">
+        <dl class="divide-y divide-slate-200">
+            <div class="dl-row"><dt class="dl-label">Film</dt><dd class="dl-value">@(Model.Movie?.Title ?? "Inconnu")</dd></div>
+            <div class="dl-row"><dt class="dl-label">Salle</dt><dd class="dl-value">@(Model.Room?.Name ?? "Inconnu")</dd></div>
+            <div class="dl-row"><dt class="dl-label">Horaire</dt><dd class="dl-value">@Model.ShowTime.ToString("dd/MM/yyyy HH:mm")</dd></div>
+            <div class="dl-row"><dt class="dl-label">Tarif</dt><dd class="dl-value">@Model.Price.ToString("F2") €</dd></div>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="form-actions mt-6">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn-danger">Supprimer définitivement</button>
+            <a asp-action="Index" class="btn-secondary">Annuler</a>
+        </form>
+    </div>
+</div>
