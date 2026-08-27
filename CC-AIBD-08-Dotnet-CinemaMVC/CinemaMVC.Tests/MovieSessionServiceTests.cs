@@ -49,6 +49,98 @@ namespace CinemaMVC.Tests
         }
 
         /// <summary>
+        /// Tests that AddMovieAsync, UpdateMovieAsync and DeleteMovieAsync all work end to end.
+        /// </summary>
+        [Fact]
+        public async Task MovieService_ShouldAddUpdateAndDeleteMovie()
+        {
+            var options = CreateNewInMemoryDatabaseOptions();
+            int movieId;
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new MovieService(new Repository<Movie>(context));
+                var movie = new Movie { Title = "Dune", Genre = "Sci-Fi", Description = "Desert planet", DurationMinutes = 166 };
+                await service.AddMovieAsync(movie);
+                movieId = movie.Id;
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new MovieService(new Repository<Movie>(context));
+                await service.UpdateMovieAsync(new Movie { Id = movieId, Title = "Dune: Part Two", Genre = "Sci-Fi", Description = "Desert planet", DurationMinutes = 166 });
+            }
+
+            int savedId;
+            using (var context = new ApplicationDbContext(options))
+            {
+                var saved = await context.Movies.FirstAsync();
+                savedId = saved.Id;
+                Assert.Equal("Dune: Part Two", saved.Title);
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new MovieService(new Repository<Movie>(context));
+                await service.DeleteMovieAsync(savedId);
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                Assert.Empty(await context.Movies.ToListAsync());
+            }
+        }
+
+        /// <summary>
+        /// Tests that AddRoomAsync, UpdateRoomAsync and DeleteRoomAsync all work end to end.
+        /// </summary>
+        [Fact]
+        public async Task RoomService_ShouldAddUpdateAndDeleteRoom()
+        {
+            var options = CreateNewInMemoryDatabaseOptions();
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                await context.Cinemas.AddAsync(new Cinema { Id = 1, Name = "Cinema Test", Address = "A", City = "B" });
+                await context.SaveChangesAsync();
+            }
+
+            int roomId;
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new RoomService(new Repository<Room>(context));
+                var room = new Room { Name = "Salle 1", Capacity = 100, CinemaId = 1 };
+                await service.AddRoomAsync(room);
+                roomId = room.Id;
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new RoomService(new Repository<Room>(context));
+                await service.UpdateRoomAsync(new Room { Id = roomId, Name = "Salle 1 Renovee", Capacity = 120, CinemaId = 1 });
+            }
+
+            int savedId;
+            using (var context = new ApplicationDbContext(options))
+            {
+                var saved = await context.Rooms.FirstAsync();
+                savedId = saved.Id;
+                Assert.Equal(120, saved.Capacity);
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new RoomService(new Repository<Room>(context));
+                await service.DeleteRoomAsync(savedId);
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                Assert.Empty(await context.Rooms.ToListAsync());
+            }
+        }
+
+        /// <summary>
         /// Tests that SearchSessionsAsync retrieves scheduled sessions by movie title filter.
         /// </summary>
         [Fact]
@@ -79,6 +171,57 @@ namespace CinemaMVC.Tests
 
                 Assert.Equal(2, result.Count());
                 Assert.All(result, s => Assert.Equal("Avatar", s.Movie?.Title));
+            }
+        }
+
+        /// <summary>
+        /// Tests that AddSessionAsync, UpdateSessionAsync and DeleteSessionAsync all work end to end.
+        /// </summary>
+        [Fact]
+        public async Task SessionService_ShouldAddUpdateAndDeleteSession()
+        {
+            var options = CreateNewInMemoryDatabaseOptions();
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                await context.Movies.AddAsync(new Movie { Id = 1, Title = "Dune", Genre = "Sci-Fi", Description = "Desert planet", DurationMinutes = 166 });
+                await context.Cinemas.AddAsync(new Cinema { Id = 1, Name = "Cinema Test", Address = "A", City = "B" });
+                await context.Rooms.AddAsync(new Room { Id = 1, Name = "Salle 1", Capacity = 100, CinemaId = 1 });
+                await context.SaveChangesAsync();
+            }
+
+            int sessionId;
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new SessionService(new Repository<Session>(context));
+                var session = new Session { MovieId = 1, RoomId = 1, ShowTime = DateTime.Today.AddHours(20), Price = 10.00m };
+                await service.AddSessionAsync(session);
+                sessionId = session.Id;
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new SessionService(new Repository<Session>(context));
+                await service.UpdateSessionAsync(new Session { Id = sessionId, MovieId = 1, RoomId = 1, ShowTime = DateTime.Today.AddHours(21), Price = 12.00m });
+            }
+
+            int savedId;
+            using (var context = new ApplicationDbContext(options))
+            {
+                var saved = await context.Sessions.FirstAsync();
+                savedId = saved.Id;
+                Assert.Equal(12.00m, saved.Price);
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var service = new SessionService(new Repository<Session>(context));
+                await service.DeleteSessionAsync(savedId);
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                Assert.Empty(await context.Sessions.ToListAsync());
             }
         }
     }

@@ -7,11 +7,11 @@ namespace CinemaMVC.Web.Services
     /// <summary>
     /// Service implementation for managing Room entities.
     /// </summary>
-    public class RoomService : IRoomService
+    public class RoomService : CrudServiceBase<Room>, IRoomService
     {
         private readonly IRepository<Room> _roomRepository;
 
-        public RoomService(IRepository<Room> roomRepository)
+        public RoomService(IRepository<Room> roomRepository) : base(roomRepository)
         {
             _roomRepository = roomRepository;
         }
@@ -61,30 +61,12 @@ namespace CinemaMVC.Web.Services
         }
 
         /// <inheritdoc />
-        public async Task AddRoomAsync(Room room)
-        {
-            ArgumentNullException.ThrowIfNull(room);
-            await _roomRepository.AddAsync(room);
-            await _roomRepository.SaveChangesAsync();
-        }
+        public Task AddRoomAsync(Room room) => AddEntityAsync(room);
 
         /// <inheritdoc />
-        public async Task UpdateRoomAsync(Room room)
-        {
-            ArgumentNullException.ThrowIfNull(room);
-            _roomRepository.Update(room);
-            await _roomRepository.SaveChangesAsync();
-        }
+        public Task UpdateRoomAsync(Room room) => UpdateEntityAsync(room);
 
         /// <inheritdoc />
-        public async Task DeleteRoomAsync(int id)
-        {
-            var room = await _roomRepository.GetByIdAsync(id);
-            if (room != null)
-            {
-                _roomRepository.Delete(room);
-                await _roomRepository.SaveChangesAsync();
-            }
-        }
+        public Task DeleteRoomAsync(int id) => DeleteEntityAsync(id);
     }
 }

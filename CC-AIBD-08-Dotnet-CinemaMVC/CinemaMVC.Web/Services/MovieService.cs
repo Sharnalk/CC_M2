@@ -7,11 +7,11 @@ namespace CinemaMVC.Web.Services
     /// <summary>
     /// Service implementation for managing Movie entities.
     /// </summary>
-    public class MovieService : IMovieService
+    public class MovieService : CrudServiceBase<Movie>, IMovieService
     {
         private readonly IRepository<Movie> _movieRepository;
 
-        public MovieService(IRepository<Movie> movieRepository)
+        public MovieService(IRepository<Movie> movieRepository) : base(movieRepository)
         {
             _movieRepository = movieRepository;
         }
@@ -54,30 +54,12 @@ namespace CinemaMVC.Web.Services
         }
 
         /// <inheritdoc />
-        public async Task AddMovieAsync(Movie movie)
-        {
-            ArgumentNullException.ThrowIfNull(movie);
-            await _movieRepository.AddAsync(movie);
-            await _movieRepository.SaveChangesAsync();
-        }
+        public Task AddMovieAsync(Movie movie) => AddEntityAsync(movie);
 
         /// <inheritdoc />
-        public async Task UpdateMovieAsync(Movie movie)
-        {
-            ArgumentNullException.ThrowIfNull(movie);
-            _movieRepository.Update(movie);
-            await _movieRepository.SaveChangesAsync();
-        }
+        public Task UpdateMovieAsync(Movie movie) => UpdateEntityAsync(movie);
 
         /// <inheritdoc />
-        public async Task DeleteMovieAsync(int id)
-        {
-            var movie = await _movieRepository.GetByIdAsync(id);
-            if (movie != null)
-            {
-                _movieRepository.Delete(movie);
-                await _movieRepository.SaveChangesAsync();
-            }
-        }
+        public Task DeleteMovieAsync(int id) => DeleteEntityAsync(id);
     }
 }

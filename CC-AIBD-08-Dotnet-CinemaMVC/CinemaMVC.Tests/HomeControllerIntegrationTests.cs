@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using CinemaMVC.Web.Data;
 using CinemaMVC.Web.Models.Entities;
 using CinemaMVC.Web.Repositories;
@@ -23,15 +25,15 @@ namespace CinemaMVC.Tests
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Remove existing ApplicationDbContext registration (PostgreSQL)
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
-                    if (descriptor != null)
-                    {
-                        services.Remove(descriptor);
-                    }
+                    // Retirer TOUT ce que UseNpgsql() a enregistré, pas seulement
+                    // DbContextOptions<T> : EF Core ajoute aussi un descripteur
+                    // IDbContextOptionsConfiguration<T> distinct, et le laisser en place
+                    // fait cohabiter Npgsql et InMemory dans le même conteneur de services
+                    // ("Only a single database provider can be registered" à l'exécution —
+                    // bug découvert en ajoutant un test qui boot vraiment l'hôte).
+                    services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
+                    services.RemoveAll<IDbContextOptionsConfiguration<ApplicationDbContext>>();
 
-                    // Register ApplicationDbContext with an InMemory database for reliable integration testing
                     services.AddDbContext<ApplicationDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("IntegrationTestsDb");
@@ -76,6 +78,26 @@ namespace CinemaMVC.Tests
                 Assert.Single(model.Cinemas);
                 Assert.Equal("Test Cinema", model.Cinemas.First().Name);
             }
+        }
+
+        /// <summary>
+        /// Boots the real ASP.NET host (Program.cs) against the InMemory database and
+        /// requests the home page over HTTP. Unlike the test above, this genuinely
+        /// exercises application startup and DbInitializer.SeedAsync, not just a
+        /// manually-constructed controller.
+        /// </summary>
+        [Fact]
+        public async Task GetHomePage_ShouldReturnSuccess_AfterFullApplicationStartup()
+        {
+            var client = _factory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync("/");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            Assert.Contains("CineGroup", content);
         }
     }
 }

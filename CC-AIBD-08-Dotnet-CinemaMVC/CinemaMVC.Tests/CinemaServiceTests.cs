@@ -174,6 +174,56 @@ namespace CinemaMVC.Tests
         }
 
         /// <summary>
+        /// Tests that UpdateCinemaAsync persists changes to an existing cinema record.
+        /// </summary>
+        [Fact]
+        public async Task UpdateCinemaAsync_ShouldPersistChanges()
+        {
+            // Arrange
+            var options = CreateNewInMemoryDatabaseOptions();
+            using (var context = new ApplicationDbContext(options))
+            {
+                await context.Cinemas.AddAsync(new Cinema { Id = 1, Name = "Old Name", Address = "Old Address", City = "Old City" });
+                await context.SaveChangesAsync();
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var repo = new Repository<Cinema>(context);
+                var service = new CinemaService(repo);
+
+                // Act
+                await service.UpdateCinemaAsync(new Cinema { Id = 1, Name = "New Name", Address = "New Address", City = "New City" });
+            }
+
+            // Assert
+            using (var context = new ApplicationDbContext(options))
+            {
+                var updated = await context.Cinemas.FindAsync(1);
+                Assert.NotNull(updated);
+                Assert.Equal("New Name", updated.Name);
+            }
+        }
+
+        /// <summary>
+        /// Tests that AddCinemaAsync and UpdateCinemaAsync reject a null entity
+        /// (CrudServiceBase's ArgumentNullException.ThrowIfNull guard).
+        /// </summary>
+        [Fact]
+        public async Task AddAndUpdateCinemaAsync_ShouldThrow_WhenCinemaIsNull()
+        {
+            // Arrange
+            var options = CreateNewInMemoryDatabaseOptions();
+            using var context = new ApplicationDbContext(options);
+            var repo = new Repository<Cinema>(context);
+            var service = new CinemaService(repo);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.AddCinemaAsync(null!));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.UpdateCinemaAsync(null!));
+        }
+
+        /// <summary>
         /// Tests that DeleteCinemaAsync removes a cinema from the database.
         /// </summary>
         [Fact]

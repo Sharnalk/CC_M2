@@ -7,11 +7,11 @@ namespace CinemaMVC.Web.Services
     /// <summary>
     /// Service implementation for managing Session entities.
     /// </summary>
-    public class SessionService : ISessionService
+    public class SessionService : CrudServiceBase<Session>, ISessionService
     {
         private readonly IRepository<Session> _sessionRepository;
 
-        public SessionService(IRepository<Session> sessionRepository)
+        public SessionService(IRepository<Session> sessionRepository) : base(sessionRepository)
         {
             _sessionRepository = sessionRepository;
         }
@@ -66,31 +66,13 @@ namespace CinemaMVC.Web.Services
         }
 
         /// <inheritdoc />
-        public async Task AddSessionAsync(Session session)
-        {
-            ArgumentNullException.ThrowIfNull(session);
-            await _sessionRepository.AddAsync(session);
-            await _sessionRepository.SaveChangesAsync();
-        }
+        public Task AddSessionAsync(Session session) => AddEntityAsync(session);
 
         /// <inheritdoc />
-        public async Task UpdateSessionAsync(Session session)
-        {
-            ArgumentNullException.ThrowIfNull(session);
-            _sessionRepository.Update(session);
-            await _sessionRepository.SaveChangesAsync();
-        }
+        public Task UpdateSessionAsync(Session session) => UpdateEntityAsync(session);
 
         /// <inheritdoc />
-        public async Task DeleteSessionAsync(int id)
-        {
-            var session = await _sessionRepository.GetByIdAsync(id);
-            if (session != null)
-            {
-                _sessionRepository.Delete(session);
-                await _sessionRepository.SaveChangesAsync();
-            }
-        }
+        public Task DeleteSessionAsync(int id) => DeleteEntityAsync(id);
 
         /// <inheritdoc />
         public async Task<IEnumerable<Session>> GetSessionsForCinemaAndDayAsync(int cinemaId, DateTime date)

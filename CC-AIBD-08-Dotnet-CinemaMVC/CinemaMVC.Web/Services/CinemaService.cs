@@ -7,11 +7,11 @@ namespace CinemaMVC.Web.Services
     /// <summary>
     /// Service implementation for managing Cinema entities.
     /// </summary>
-    public class CinemaService : ICinemaService
+    public class CinemaService : CrudServiceBase<Cinema>, ICinemaService
     {
         private readonly IRepository<Cinema> _cinemaRepository;
 
-        public CinemaService(IRepository<Cinema> cinemaRepository)
+        public CinemaService(IRepository<Cinema> cinemaRepository) : base(cinemaRepository)
         {
             _cinemaRepository = cinemaRepository;
         }
@@ -59,30 +59,12 @@ namespace CinemaMVC.Web.Services
         }
 
         /// <inheritdoc />
-        public async Task AddCinemaAsync(Cinema cinema)
-        {
-            ArgumentNullException.ThrowIfNull(cinema);
-            await _cinemaRepository.AddAsync(cinema);
-            await _cinemaRepository.SaveChangesAsync();
-        }
+        public Task AddCinemaAsync(Cinema cinema) => AddEntityAsync(cinema);
 
         /// <inheritdoc />
-        public async Task UpdateCinemaAsync(Cinema cinema)
-        {
-            ArgumentNullException.ThrowIfNull(cinema);
-            _cinemaRepository.Update(cinema);
-            await _cinemaRepository.SaveChangesAsync();
-        }
+        public Task UpdateCinemaAsync(Cinema cinema) => UpdateEntityAsync(cinema);
 
         /// <inheritdoc />
-        public async Task DeleteCinemaAsync(int id)
-        {
-            var cinema = await _cinemaRepository.GetByIdAsync(id);
-            if (cinema != null)
-            {
-                _cinemaRepository.Delete(cinema);
-                await _cinemaRepository.SaveChangesAsync();
-            }
-        }
+        public Task DeleteCinemaAsync(int id) => DeleteEntityAsync(id);
     }
 }

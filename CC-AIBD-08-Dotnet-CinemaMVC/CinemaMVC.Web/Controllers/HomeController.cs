@@ -51,11 +51,6 @@ namespace CinemaMVC.Web.Controllers
 
         public async Task<IActionResult> CinemaDetails(int id, DateTime? date)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var cinema = await _cinemaService.GetCinemaByIdAsync(id);
             if (cinema == null)
             {

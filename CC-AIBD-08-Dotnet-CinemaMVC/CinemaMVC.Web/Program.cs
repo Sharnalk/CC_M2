@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CinemaMVC.Web.Data;
+using CinemaMVC.Web.Filters;
 using CinemaMVC.Web.Middlewares;
 using CinemaMVC.Web.Repositories;
 using CinemaMVC.Web.Services;
@@ -18,7 +19,10 @@ CultureInfo.DefaultThreadCurrentUICulture = frenchCulture;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<ValidateModelStateAttribute>();
+});
 
 // 1. Configure EF Core with PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 

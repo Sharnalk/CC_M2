@@ -21,11 +21,6 @@ namespace CinemaMVC.Web.Controllers
 
         public async Task<IActionResult> Index(string? search, int page = 1)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             int pageSize = 5;
             var (movies, totalCount) = await _movieService.GetMoviesPagedAsync(search ?? "", page, pageSize);
 
@@ -38,11 +33,6 @@ namespace CinemaMVC.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var movie = await _movieService.GetMovieByIdAsync(id);
             if (movie == null)
             {
@@ -70,11 +60,6 @@ namespace CinemaMVC.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var movie = await _movieService.GetMovieByIdAsync(id);
             if (movie == null)
             {
@@ -102,11 +87,6 @@ namespace CinemaMVC.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var movie = await _movieService.GetMovieByIdAsync(id);
             if (movie == null)
             {
@@ -119,11 +99,6 @@ namespace CinemaMVC.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             await _movieService.DeleteMovieAsync(id);
             return RedirectToAction(nameof(Index));
         }
