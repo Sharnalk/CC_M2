@@ -38,12 +38,12 @@ namespace CinemaMVC.Web.Data
                 var result = await userManager.CreateAsync(adminUser, "Admin123!");
                 if (!result.Succeeded)
                 {
-                    throw new Exception($"Failed to seed admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    throw new InvalidOperationException($"Failed to seed admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                 }
             }
 
             // 3. Seed Cinemas (if none exist)
-            if (!context.Cinemas.Any())
+            if (!await context.Cinemas.AnyAsync())
             {
                 var cinemas = new List<Cinema>
                 {
@@ -86,7 +86,7 @@ namespace CinemaMVC.Web.Data
                         Title = "Inception", 
                         Genre = "Sci-Fi / Thriller", 
                         DurationMinutes = 148, 
-                        ReleaseDate = new DateTime(2010, 7, 16),
+                        ReleaseDate = new DateTime(2010, 7, 16, 0, 0, 0, DateTimeKind.Utc),
                         Description = "Dom Cobb est un voleur expérimenté dans l'art de l'extraction, sa spécialité consiste à s'approprier les secrets les plus précieux d'un individu pendant qu'il rêve."
                     },
                     new Movie 
@@ -94,7 +94,7 @@ namespace CinemaMVC.Web.Data
                         Title = "Avatar: La Voie de l'eau", 
                         Genre = "Aventure / Action", 
                         DurationMinutes = 192, 
-                        ReleaseDate = new DateTime(2022, 12, 14),
+                        ReleaseDate = new DateTime(2022, 12, 14, 0, 0, 0, DateTimeKind.Utc),
                         Description = "Jake Sully et Ney'tiri ont formé une famille et font tout pour rester ensemble. Ils doivent cependant quitter leur foyer et explorer les régions de Pandora."
                     },
                     new Movie 
@@ -102,7 +102,7 @@ namespace CinemaMVC.Web.Data
                         Title = "Interstellar", 
                         Genre = "Sci-Fi / Drame", 
                         DurationMinutes = 169, 
-                        ReleaseDate = new DateTime(2014, 11, 5),
+                        ReleaseDate = new DateTime(2014, 11, 5, 0, 0, 0, DateTimeKind.Utc),
                         Description = "Un groupe d'explorateurs voyage au-delà de notre galaxie grâce à un voyage interstellaire pour découvrir si l'humanité a un avenir parmi les étoiles."
                     },
                     new Movie 
@@ -110,7 +110,7 @@ namespace CinemaMVC.Web.Data
                         Title = "Dune: Deuxième Partie", 
                         Genre = "Sci-Fi / Aventure", 
                         DurationMinutes = 166, 
-                        ReleaseDate = new DateTime(2024, 2, 28),
+                        ReleaseDate = new DateTime(2024, 2, 28, 0, 0, 0, DateTimeKind.Utc),
                         Description = "Paul Atreides s'unit à Chani et aux Fremen tout en préparant sa revanche contre les conspirateurs qui ont détruit sa famille."
                     },
                     new Movie 
@@ -118,7 +118,7 @@ namespace CinemaMVC.Web.Data
                         Title = "Oppenheimer", 
                         Genre = "Drame / Biopic", 
                         DurationMinutes = 180, 
-                        ReleaseDate = new DateTime(2023, 7, 19),
+                        ReleaseDate = new DateTime(2023, 7, 19, 0, 0, 0, DateTimeKind.Utc),
                         Description = "Le destin biographique exceptionnel du physicien J. Robert Oppenheimer, qui a dirigé le Projet Manhattan menant à la création de la bombe atomique."
                     }
                 };

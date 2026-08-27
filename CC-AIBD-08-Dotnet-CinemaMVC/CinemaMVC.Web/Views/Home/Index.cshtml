@@ -22,7 +22,8 @@
 
             <form method="get" class="mt-4 space-y-3">
                 <input type="hidden" name="searchCinema" value="@searchCinema" />
-                <input type="text" name="searchMovie" value="@searchMovie" class="input" placeholder="Ex : Inception, Avatar..." />
+                <label for="searchMovie" class="sr-only">Titre du film</label>
+                <input id="searchMovie" type="text" name="searchMovie" value="@searchMovie" class="input" placeholder="Ex : Inception, Avatar..." />
                 <button type="submit" class="btn-primary w-full justify-center">Rechercher les séances</button>
                 @if (!string.IsNullOrEmpty(searchMovie))
                 {
@@ -67,7 +68,8 @@
                 </div>
                 <form method="get" class="flex gap-2">
                     <input type="hidden" name="searchMovie" value="@searchMovie" />
-                    <input type="text" name="searchCinema" value="@searchCinema" class="input" placeholder="Cinéma ou ville" />
+                    <label for="searchCinema" class="sr-only">Cinéma ou ville</label>
+                    <input id="searchCinema" type="text" name="searchCinema" value="@searchCinema" class="input" placeholder="Cinéma ou ville" />
                     <button type="submit" class="btn-dark">Filtrer</button>
                     @if (!string.IsNullOrEmpty(searchCinema))
                     {

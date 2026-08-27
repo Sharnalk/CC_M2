@@ -37,9 +37,14 @@ namespace CinemaMVC.Web.Services
 
             if (!string.IsNullOrWhiteSpace(search))
             {
+                // Contains(string, StringComparison) n'est pas traduisible par Npgsql, et
+                // EF.Functions.ILike (PostgreSQL) n'existe pas sous le provider InMemory
+                // utilise par les tests : les deux "corrections" plus idiomatiques cassent
+                // l'un des deux fournisseurs. ToLower()+Contains() reste le seul motif
+                // qui fonctionne sur PostgreSQL comme en InMemory (verifie en direct).
                 var searchLower = search.ToLower();
-                query = query.Where(c => c.Name.ToLower().Contains(searchLower) 
-                                      || c.City.ToLower().Contains(searchLower) 
+                query = query.Where(c => c.Name.ToLower().Contains(searchLower)
+                                      || c.City.ToLower().Contains(searchLower)
                                       || c.Address.ToLower().Contains(searchLower));
             }
 
@@ -56,7 +61,7 @@ namespace CinemaMVC.Web.Services
         /// <inheritdoc />
         public async Task AddCinemaAsync(Cinema cinema)
         {
-            if (cinema == null) throw new ArgumentNullException(nameof(cinema));
+            ArgumentNullException.ThrowIfNull(cinema);
             await _cinemaRepository.AddAsync(cinema);
             await _cinemaRepository.SaveChangesAsync();
         }
@@ -64,7 +69,7 @@ namespace CinemaMVC.Web.Services
         /// <inheritdoc />
         public async Task UpdateCinemaAsync(Cinema cinema)
         {
-            if (cinema == null) throw new ArgumentNullException(nameof(cinema));
+            ArgumentNullException.ThrowIfNull(cinema);
             _cinemaRepository.Update(cinema);
             await _cinemaRepository.SaveChangesAsync();
         }

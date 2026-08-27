@@ -11,7 +11,7 @@ namespace CinemaMVC.Tests
     /// </summary>
     public class MovieSessionServiceTests
     {
-        private DbContextOptions<ApplicationDbContext> CreateNewInMemoryDatabaseOptions()
+        private static DbContextOptions<ApplicationDbContext> CreateNewInMemoryDatabaseOptions()
         {
             return new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())

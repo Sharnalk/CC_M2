@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>cc-aibd-08-cinemamvc-a1e4f2b6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -100,9 +100,4 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.Run();
-
-/// <summary>
-/// Exposes the Program class to the integration testing assembly.
-/// </summary>
-public partial class Program { }
+await app.RunAsync();

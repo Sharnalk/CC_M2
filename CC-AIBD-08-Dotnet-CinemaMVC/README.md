@@ -97,8 +97,17 @@ cd /home/sharnalk/Projects/CC_M2
 docker compose up -d postgres
 ```
 
-Chaîne de connexion correspondante (`CinemaMVC.Web/appsettings.json`) :
-`Host=localhost;Database=cinema_db;Username=cinema_user;Password=cinema_password;Port=5433`
+Chaîne de connexion (`CinemaMVC.Web/appsettings.json`) :
+`Host=localhost;Database=cinema_db;Username=cinema_user;Password=__SET_VIA_USER_SECRETS__;Port=5433`
+
+Le vrai mot de passe n'est **pas** dans ce fichier (corrigé suite à l'analyse
+SonarQube, règle `S2068` — identifiant codé en dur) : il est fourni via le
+magasin de secrets utilisateur .NET, à configurer une seule fois :
+
+```bash
+cd CC-AIBD-08-Dotnet-CinemaMVC/CinemaMVC.Web
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=cinema_db;Username=cinema_user;Password=cinema_password;Port=5433"
+```
 
 ### 2. Lancer l'application
 

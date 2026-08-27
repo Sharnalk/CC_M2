@@ -11,7 +11,7 @@ namespace CinemaMVC.Tests
     /// </summary>
     public class CinemaServiceTests
     {
-        private DbContextOptions<ApplicationDbContext> CreateNewInMemoryDatabaseOptions()
+        private static DbContextOptions<ApplicationDbContext> CreateNewInMemoryDatabaseOptions()
         {
             // Generates a unique database name to isolate tests
             return new DbContextOptionsBuilder<ApplicationDbContext>()

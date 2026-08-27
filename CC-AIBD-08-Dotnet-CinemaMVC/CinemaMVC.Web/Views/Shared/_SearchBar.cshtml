@@ -14,7 +14,8 @@
 
 <div class="toolbar">
     <form method="get" class="flex w-full gap-2 sm:w-auto">
-        <input type="text" name="search" value="@filter" placeholder="@Model" class="input sm:w-80" />
+        <label for="search" class="sr-only">@Model</label>
+        <input id="search" type="text" name="search" value="@filter" placeholder="@Model" class="input sm:w-80" />
         <button type="submit" class="btn-dark">Rechercher</button>
         @if (!string.IsNullOrEmpty(filter))
         {

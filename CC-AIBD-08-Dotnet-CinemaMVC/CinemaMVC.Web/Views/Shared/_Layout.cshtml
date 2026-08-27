@@ -156,7 +156,12 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/preline@2/dist/preline.js"></script>
+    @* Version figée (et non "@@2" flottant) : une intégrité SRI doit pointer vers un
+       contenu immuable, sinon la moindre mise à jour de la librairie casserait le
+       chargement du script. *@
+    <script src="https://cdn.jsdelivr.net/npm/preline@2.7.0/dist/preline.js"
+            integrity="sha384-+Ma4/aEwxkb0nJ1oTi78/vJ/HlS7pZ97RDoj3aA+nHavu1KFPufAjINN7bgL+LEx"
+            crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

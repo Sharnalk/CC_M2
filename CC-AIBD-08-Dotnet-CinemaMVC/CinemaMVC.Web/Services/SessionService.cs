@@ -47,8 +47,10 @@ namespace CinemaMVC.Web.Services
 
             if (!string.IsNullOrWhiteSpace(search))
             {
+                // ToLower()+Contains() : seul motif compatible a la fois avec PostgreSQL
+                // (Npgsql) et le provider InMemory des tests (voir CinemaService).
                 var searchLower = search.ToLower();
-                query = query.Where(s => (s.Movie != null && s.Movie.Title.ToLower().Contains(searchLower)) 
+                query = query.Where(s => (s.Movie != null && s.Movie.Title.ToLower().Contains(searchLower))
                                       || (s.Room != null && s.Room.Name.ToLower().Contains(searchLower))
                                       || (s.Room != null && s.Room.Cinema != null && s.Room.Cinema.Name.ToLower().Contains(searchLower)));
             }
@@ -66,7 +68,7 @@ namespace CinemaMVC.Web.Services
         /// <inheritdoc />
         public async Task AddSessionAsync(Session session)
         {
-            if (session == null) throw new ArgumentNullException(nameof(session));
+            ArgumentNullException.ThrowIfNull(session);
             await _sessionRepository.AddAsync(session);
             await _sessionRepository.SaveChangesAsync();
         }
@@ -74,7 +76,7 @@ namespace CinemaMVC.Web.Services
         /// <inheritdoc />
         public async Task UpdateSessionAsync(Session session)
         {
-            if (session == null) throw new ArgumentNullException(nameof(session));
+            ArgumentNullException.ThrowIfNull(session);
             _sessionRepository.Update(session);
             await _sessionRepository.SaveChangesAsync();
         }
