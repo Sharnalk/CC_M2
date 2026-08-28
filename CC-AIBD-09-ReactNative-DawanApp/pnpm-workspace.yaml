@@ -1,0 +1,4 @@
+allowBuilds:
+  msgpackr-extract: true
+minimumReleaseAgeExclude:
+  - '@expo/metro-runtime@56.0.17'
