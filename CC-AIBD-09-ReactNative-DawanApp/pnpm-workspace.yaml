@@ -2,3 +2,5 @@ allowBuilds:
   msgpackr-extract: true
 minimumReleaseAgeExclude:
   - '@expo/metro-runtime@56.0.17'
+overrides:
+  zod@<4.6.6: ^4.6.6
