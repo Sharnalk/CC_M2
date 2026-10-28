@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  deepmerge@4.3.1: 201401abff32e55a8a398ada8e6c53a3524d30bfb606230c81b72b40acd1c0a5
+
 importers:
 
   .:
@@ -3180,7 +3183,7 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  deepmerge@4.3.1: {}
+  deepmerge@4.3.1(patch_hash=201401abff32e55a8a398ada8e6c53a3524d30bfb606230c81b72b40acd1c0a5): {}
 
   delayed-stream@1.0.0: {}
 
@@ -3738,7 +3741,7 @@ snapshots:
       babel-jest: 29.7.0(@babel/core@7.29.7(supports-color@5.5.0))(supports-color@5.5.0)
       chalk: 4.1.2
       ci-info: 3.9.0
-      deepmerge: 4.3.1
+      deepmerge: 4.3.1(patch_hash=201401abff32e55a8a398ada8e6c53a3524d30bfb606230c81b72b40acd1c0a5)
       glob: 7.2.3
       graceful-fs: 4.2.11
       jest-circus: 29.7.0(supports-color@5.5.0)
